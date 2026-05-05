@@ -1,0 +1,75 @@
+[
+  {
+    "name": "Login page loads",
+    "endpoint": "login.php",
+    "method": "GET",
+    "data": "",
+    "expect_status": 200,
+    "expect_contains": "Login"
+  },
+  {
+    "name": "Index redirects",
+    "endpoint": "index.php",
+    "method": "GET",
+    "data": "",
+    "expect_status": 302,
+    "expect_contains": ""
+  },
+  {
+    "name": "Correct login",
+    "endpoint": "login_process.php",
+    "method": "POST",
+    "data": "email=nicholasdeblock@gmail.com&password=$Capstonenicholas33",
+    "expect_status": 302,
+    "expect_contains": ""
+  },
+  {
+    "name": "Incorrect Email",
+    "endpoint": "login_process.php",
+    "method": "POST",
+    "data": "email=wrongemail@gmail.com&password=Capstonenicholas33",
+    "expect_status": 200,
+    "expect_contains": ""
+  },
+  {
+    "name": "Incorrect Password",
+    "endpoint": "login_process.php",
+    "method": "POST",
+    "data": "email=nicholasdeblock@gmail.com&password=WrongPassword",
+    "expect_status": 200,
+    "expect_contains": ""
+  },
+  {
+    "name": "Correct Account Creation",
+    "endpoint": "create_account.php",
+    "method": "POST",
+    "data": "name=Test+User&email=accountcreation@email.com&password=CorrectPassword1&join_code=131313&grade_id=5",
+    "expect_status": 302,
+    "expect_contains": ""
+  },
+  {
+    "name": "Account Creation with Existing Email",
+    "endpoint": "create_account.php",
+    "method": "POST",
+    "data": "name=Test+User&email=accountcreation@email.com&password=CorrectPassword1&join_code=131313&grade_id=5",
+    "expect_status": 200,
+    "expect_contains": ""
+  },
+  {
+    "name": "Account Creation with Bad Password",
+    "endpoint": "create_account.php",
+    "method": "POST",
+    "data": "name=Test+User&email=accountcreation@email.com&password=hi&join_code=131313&grade_id=5",
+    "expect_status": 200,
+    "expect_contains": ""
+  },
+  {
+    "name": "Account Creation with Bad Join Code",
+    "endpoint": "create_account.php",
+    "method": "POST",
+    "data": "name=Test+User&email=accountcreation@email.com&password=hi&join_code=WrongCode&grade_id=5",
+    "expect_status": 200,
+    "expect_contains": ""
+  }
+
+]

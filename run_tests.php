@@ -1,17 +1,19 @@
 <?php
 
-ini_set('display_errors', 1);
-error_reporting(E_ALL);
+// ini_set('display_errors', 1);
+// error_reporting(E_ALL);
 
-
+// checks to make sure the user is an admin
 session_start();
 if (!isset($_SESSION['user_id']) || ($_SESSION['role'] ?? '') !== 'admin') {
     header("Location: ../login.php");
     exit();
 }
 
+// connects to the database
 include("db_connect.php");
 
+//sets the json file to a variable and sets the base url for the tests
 $tests = json_decode(file_get_contents("tests.json"), true);
 $base_url = "https://brightstart.space/";
 ?>
@@ -55,12 +57,16 @@ $base_url = "https://brightstart.space/";
 <div class="card">
     <h2>Test Results</h2>
 
+    <!-- loops tought the test suit and runs each test,  -->
     <?php foreach ($tests as $test):
+        //sets the test url and initializes curl
         $url = $base_url . $test["endpoint"];
         $ch = curl_init();
+        //sets up the curl response 
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_HEADER, true);
+        
         if ($test["method"] == "POST") {
             curl_setopt($ch, CURLOPT_POST, true);
             curl_setopt($ch, CURLOPT_POSTFIELDS, $test["data"]);
@@ -68,9 +74,10 @@ $base_url = "https://brightstart.space/";
         $response = curl_exec($ch);
         $status = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         unset($ch);
-
+        //checks the response against the expected results and sets it to either pass or fail
         $status_ok = ($status == $test["expect_status"]);
         $content_ok = true;
+        //checks the expected content if there is any
         if ($test["expect_contains"] != "") {
             $content_ok = strpos($response, $test["expect_contains"]) !== false;
         }
@@ -79,6 +86,7 @@ $base_url = "https://brightstart.space/";
     ?>
         <div class="result">
             <div class="name"><?= htmlspecialchars($test["name"]) ?></div>
+            <!-- chages the class based on results -->
             <?php if ($passed): ?>
                 <div class="pass">PASS</div>
             <?php else: ?>
@@ -88,7 +96,7 @@ $base_url = "https://brightstart.space/";
         </div>
     <?php endforeach; ?>
 
-    //This deletes the test account after running the tests so it dosent throw an account already exists error
+    <!-- This deletes the test account after running the tests so it dosent throw an account already exists error -->
     <?php 
         $test_email = "accountcreation@email.com";
         $stmt = $conn->prepare("DELETE FROM StudentAccount WHERE email = ?");

@@ -40,6 +40,14 @@
     "expect_contains": ""
   },
   {
+    "name": "Registration page loads",
+    "endpoint": "register.php",
+    "method": "GET",
+    "data": "",
+    "expect_status": 200,
+    "expect_contains": "Create Account"
+  },
+  {
     "name": "Correct Account Creation",
     "endpoint": "create_account.php",
     "method": "POST",
